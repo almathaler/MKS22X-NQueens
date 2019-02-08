@@ -2,12 +2,32 @@ public class QueenBoard{
   private int[][]board;
   public static void main(String[] args){
     QueenBoard example = new QueenBoard(8);
+    /*
+    for (int i = 0; i<8; i++){
+      for (int k = 0; k<8; k++){
+        System.out.println("******");
+        System.out.println("Adding at: " + i + ", " +k);
+        example.addQueen(i,k);
+        System.out.println(example.toStringDebug());
+        System.out.println(example.toString());
+        example.removeQueen(i,k);
+        System.out.println(example.toStringDebug());
+        System.out.println(example.toString());
+        System.out.println("******");
+      }
+    }
     example.addQueen(4, 4);
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
     example.removeQueen(4, 4);
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
+    */
+    example.addQueen(4,4);
+    example.addQueen(5,6);
+    System.out.println(example.toStringDebug());
+    example.removeQueen(5,6);
+    System.out.println(example.toStringDebug());
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -155,7 +175,52 @@ public class QueenBoard{
   *        true when the board is solveable, and leaves the board in a solved state
   *@throws IllegalStateException when the board starts with any non-zero value
   */
-  // public boolean solve(){}
+  public boolean solve() throws IllegalStateException{
+    if (board[0][0] != 0){ //exception
+      throw new IllegalStateException("You didn't input a empty board!");
+    }
+    if (board.length == 1){ //"trivial"
+      board[0][0] = -1;
+      return true;
+    }
+    if (board.length < 4){ //doesn't work
+      return false;
+    }else{
+      return helpSolve(0,0);
+    }
+  }
+
+//it shld be a helper solve method that is void, solve(int curR){}
+//and it will use isSpace to scan through curR. IF there's a space, add to it. Continue to solve with curR+1
+//if there isn't space, remove (find instance of -1 in board[curR-1]) previous queen and solve that row again
+  private boolean helpSolve(int curR, int curC){
+    if (curR >= board.length){
+      return true;
+    }else if (isSpace(curR, curC) != -1){
+      addQueen(curR, curC);
+      helpSolve(curR+1, curC+1);
+    }else{
+      int toRemove;
+      for (int i = 0; i<board.length; i++){
+        if board[curR-1][i] == -1;
+        toRemove = i;
+      }
+      removeQueen[curR-1][toRemove];
+      helpSolve(curR-1, toRemove+1);
+    }if (curR == 0 and curC == board.length){
+      return false;
+    }
+  }
+
+
+  private int isSpace(int row, int start){ //for a given row, go thru all the columns. return first space that something can be put in
+    for (int i = start; i<board.length; i++){
+      if (board[row][i] == 0){
+        return i;
+      }
+    }
+    return -1;
+  }
 
   /**
   *@return the number of solutions found, and leaves the board filled with only 0's
