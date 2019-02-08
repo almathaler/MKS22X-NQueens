@@ -4,6 +4,8 @@ public class QueenBoard{
     QueenBoard example = new QueenBoard(8);
     example.addQueen(4, 4);
     System.out.println(example.toStringDebug());
+    example.removeQueen(4, 4);
+    System.out.println(example.toStringDebug());
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -58,7 +60,50 @@ public class QueenBoard{
     return true;
     //if at col 3 and row 4, you can do +3+3, +2+2, +1+1 as your 3 diagonals that are above the QueenBoard
   };
-  // private boolean removeQueen(int r, int c){};
+  private boolean removeQueen(int r, int c){
+    board[r][c] = 0;
+    for (int upRow = 0; upRow<r; upRow++){
+      board[upRow][c] -= 1;
+    }
+    for (int downRow = r+1; downRow<board.length; downRow++){
+      board[downRow][c] -= 1;
+    }
+    for (int leftCol = 0; leftCol<c; leftCol++){
+      board[r][leftCol] -= 1;
+    }
+    for (int rightCol = c+1; rightCol <board.length; rightCol++){
+      board[r][rightCol] -=1;
+    }
+    int curR = r+1;
+    int curC = c+1; // down to bottom right
+    while (curR < board.length && curC < board.length){
+      board[curR][curC] -= 1;
+      curR++;
+      curC++;
+    }
+    curR = r+1;
+    curC = c-1; // down to bottom left
+    while (curR < board.length && curC >= 0){
+      board[curR][curC] -= 1;
+      curR++;
+      curC--;
+    }
+    curR = r-1;
+    curC = c-1; // up to top left
+    while (curR >= 0 && curC >= 0){
+      board[curR][curC] -= 1;
+      curR--;
+      curC--;
+    }
+    curR = r-1;
+    curC = c+1; // up to top right
+    while (curR >= 0 && curC < board.length){
+      board[curR][curC] -= 1;
+      curR--;
+      curC++;
+    }
+    return true;
+  };
   /**
   *@return The output string formatted as follows:
   *All numbers that represent queens are replaced with 'Q'
