@@ -16,6 +16,9 @@ public class QueenBoard{
     }
   }
   private boolean addQueen(int r, int c){
+    if (board[r][c] == -1){
+      return false; //there's already a queen
+    }
     board[r][c] = -1;
     for (int upRow = 0; upRow<r; upRow++){
       board[upRow][c] += 1;
@@ -61,6 +64,9 @@ public class QueenBoard{
     //if at col 3 and row 4, you can do +3+3, +2+2, +1+1 as your 3 diagonals that are above the QueenBoard
   };
   private boolean removeQueen(int r, int c){
+    if (board[r][c] == 0){
+      return false; nothing to remove
+    }
     board[r][c] = 0;
     for (int upRow = 0; upRow<r; upRow++){
       board[upRow][c] -= 1;
