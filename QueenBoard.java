@@ -4,8 +4,10 @@ public class QueenBoard{
     QueenBoard example = new QueenBoard(8);
     example.addQueen(4, 4);
     System.out.println(example.toStringDebug());
+    System.out.println(example.toString());
     example.removeQueen(4, 4);
     System.out.println(example.toStringDebug());
+    System.out.println(example.toString());
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -65,7 +67,7 @@ public class QueenBoard{
   };
   private boolean removeQueen(int r, int c){
     if (board[r][c] == 0){
-      return false; nothing to remove
+      return false; //nothing to remove
     }
     board[r][c] = 0;
     for (int upRow = 0; upRow<r; upRow++){
@@ -122,7 +124,20 @@ public class QueenBoard{
   *(pythonic string notation for clarity,
   *excludes the character up to the *)
   */
-  // public String toString(){}
+  public String toString(){
+    String toReturn = "";
+    for (int i = 0; i<board.length; i++){
+      for (int k = 0; k<board.length; k++){
+        if (board[i][k] == -1){
+          toReturn += "Q ";
+        }else{
+          toReturn += "_ ";
+        }
+      }
+      toReturn += "\n";
+    }
+    return toReturn;
+  }
 
   private String toStringDebug(){
     String toReturn = "";
