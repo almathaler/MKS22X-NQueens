@@ -23,11 +23,9 @@ public class QueenBoard{
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
     */
-    example.addQueen(4,4);
-    example.addQueen(5,6);
+    example.solve();
     System.out.println(example.toStringDebug());
-    example.removeQueen(5,6);
-    System.out.println(example.toStringDebug());
+
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -84,7 +82,7 @@ public class QueenBoard{
     }
     return true;
     //if at col 3 and row 4, you can do +3+3, +2+2, +1+1 as your 3 diagonals that are above the QueenBoard
-  };
+  };//PROBLEM IS THAT ADDING A QUEEN WILL ADD 1 TO THE QUEENS THAT ARE ELSEWHERE THAT IS A PROBLEM!!! THATS
   private boolean removeQueen(int r, int c){
     if (board[r][c] == 0){
       return false; //nothing to remove
@@ -194,30 +192,55 @@ public class QueenBoard{
 //and it will use isSpace to scan through curR. IF there's a space, add to it. Continue to solve with curR+1
 //if there isn't space, remove (find instance of -1 in board[curR-1]) previous queen and solve that row again
   private boolean helpSolve(int curR, int curC){
+    //base case is when curR >= board.length -- means you've filled up all the board
+    //also if you've gotten to the end of the first row (as in, gone thru every possible first position due to a lot of removes, you've failed to complete the board. shouldn't really fail tho)
+    //MAYBE DO SOMETHING THAT IS LIKE WITH A LOOP, FOR EVERY SPOT IN CURR RUN HELPSOLVE AND IF IT RUNS UNTIL A SPACE ON EVERY ROW IS FULL
+    //THEN RETURN TRUE
+
+
+
+    /*
     if (curR >= board.length){
       return true;
-    }else if (isSpace(curR, curC) != -1){
-      addQueen(curR, curC);
-      helpSolve(curR+1, curC+1);
-    }else{
-      int toRemove;
-      for (int i = 0; i<board.length; i++){
-        if board[curR-1][i] == -1;
-        toRemove = i;
-      }
-      removeQueen[curR-1][toRemove];
-      helpSolve(curR-1, toRemove+1);
-    }if (curR == 0 and curC == board.length){
+    }else if (curR == 0 && curC == board.length+1){//should be +1 or not?
       return false;
+    }else if (isSpace(curR, curC) != -1){
+      curC = isSpace(curR, curC);
+      addQueen(curR, curC);
+      System.out.println("added Queen to (" + curR +", " + curC + ")");
+      System.out.println(toString());
+      helpSolve(curR+1, curC);
+    }else{
+      int toRemove = 0;//BEFORE I JUST HAD INT TOREMOVE; THAT MIGHT BE HOW IT SOULD BE NOW TOO IDK
+      for (int i = 0; i<board.length; i++){
+        if (board[curR-1][i] == -1){
+          toRemove = i;
+        }
+      }
+      curR--;
+      removeQueen(curR, toRemove);
+      System.out.println("removed Queen from (" + curR +", " + toRemove + ")");
+      System.out.println(toString());
+
+      int lastToExclude = 0;
+      for (int i = 0; i<board.length; i++){
+        if (board[curR-1][i] == -1){
+          lastToExclude = i;
+        }
+      }
+
+      helpSolve(curR, toRemove);
     }
+    return false;
+    */
   }
 
-
-  private int isSpace(int row, int start){ //for a given row, go thru all the columns. return first space that something can be put in
-    for (int i = start; i<board.length; i++){
-      if (board[row][i] == 0){
+  //exclude is supposed to be either previous space of queen, if you removed, or -1 meaning just check based on other queen's paths
+  private int isSpace(int row, int exclude){ //for a given row, go thru all the columns. return first space that something can be put in
+    for (int i = 0; i<board.length; i++){
+      if (board[row][i] == 0 && exclude != -1 && i != exclude){
         return i;
-      }
+      }// PROBLEM WITH THIS IS THAT YOU NEED A LIST OF EVERYTHING TO EXCLUDE, OTHERWISE IT WILL GO LIKE 0 THEN 1 THEN REMOVE 1, 1 IS EXCLUDE SO U CAN STILL DO 0
     }
     return -1;
   }
