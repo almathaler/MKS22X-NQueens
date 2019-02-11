@@ -1,32 +1,16 @@
 public class QueenBoard{
   private int[][]board;
   public static void main(String[] args){
-    QueenBoard example = new QueenBoard(8);
-    /*
-    for (int i = 0; i<8; i++){
-      for (int k = 0; k<8; k++){
-        System.out.println("******");
-        System.out.println("Adding at: " + i + ", " +k);
-        example.addQueen(i,k);
-        System.out.println(example.toStringDebug());
-        System.out.println(example.toString());
-        example.removeQueen(i,k);
-        System.out.println(example.toStringDebug());
-        System.out.println(example.toString());
-        System.out.println("******");
-      }
-    }
-    example.addQueen(4, 4);
-    System.out.println(example.toStringDebug());
-    System.out.println(example.toString());
-    example.removeQueen(4, 4);
-    System.out.println(example.toStringDebug());
-    System.out.println(example.toString());
-    */
+    QueenBoard example = new QueenBoard(Integer.parseInt(args[0]));
     example.solve();
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
-
+    /*
+    for (int i = 1; i<12; i++){
+      QueenBoard example = new QueenBoard(i);
+      v
+    }
+    */
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -40,14 +24,14 @@ public class QueenBoard{
     return board.length;
   }
   private boolean canPlace(int r, int c){
-    System.out.println("***CAN PLACE CHECKING IF "  + r + ", " + c + "IS FINE. THIS IS IT'S VALUE: " + board[r][c]);
+    //System.out.println("***CAN PLACE CHECKING IF "  + r + ", " + c + "IS FINE. THIS IS IT'S VALUE: " + board[r][c]);
     return board[r][c] == 0;
   }
   private int getVal(int r, int c){
     return board[r][c];
   }
   private boolean addQueen(int r, int c){
-    if (board[r][c] == -1){
+    if (board[r][c] != 0){
       return false; //there's already a queen
     }
     board[r][c] = -1;
@@ -95,7 +79,7 @@ public class QueenBoard{
     //if at col 3 and row 4, you can do +3+3, +2+2, +1+1 as your 3 diagonals that are above the QueenBoard
   };//PROBLEM IS THAT ADDING A QUEEN WILL ADD 1 TO THE QUEENS THAT ARE ELSEWHERE THAT IS A PROBLEM!!! THATS
   private boolean removeQueen(int r, int c){
-    if (board[r][c] == 0){
+    if (board[r][c] != -1){
       return false; //nothing to remove
     }
     board[r][c] = 0;
@@ -188,35 +172,46 @@ public class QueenBoard{
     if (board[0][0] != 0){ //exception
       throw new IllegalStateException("You didn't input a empty board!");
     }
+    /*
     if (board.length == 1){ //"trivial"
       board[0][0] = -1;
       return true;
     }
     if (board.length < 4){ //doesn't work
       return false;
-    }else{
-      for (int i = 0; i < board.length; i++){
-        System.out.println("***NOW CHECKING WITH STARTING POINT AT (0, " + i + ")");
-        QueenBoard temp = new QueenBoard(getSize());
-        if (helpSolve(0, temp)){
-          return true;
-        }
-      }
-      return false;
+    */
+    else{
+      return helpSolve(0);
     }
+      //return false;
   }
 
 //it shld be a helper solve method that is void, solve(int curR){}
 //and it will use isSpace to scan through curR. IF there's a space, add to it. Continue to solve with curR+1
 //if there isn't space, remove (find instance of -1 in board[curR-1]) previous queen and solve that row again
+  private boolean helpSolve(int curR){
+    if (curR >= board.length){
+      return true; //if you've hit the end, you're true
+    }
+    for (int c = 0; c<board.length; c++){ //for every column in a row
+      if (addQueen(curR, c)){ //check to see if you can add a queen there
+        if (helpSolve(curR+1)){ //if you can, then go on to checking for all other possibilites if u can add a queen
+          return true; //return true if you get to curR >= board.length, then you won't have to remove the queen
+        }
+        removeQueen(curR, c);
+      }
+    }
+    return false;
+  }
+  /*
   private boolean helpSolve(int curR, QueenBoard temp){
     //base case is when curR >= board.length -- means you've filled up all the board
     //also if you've gotten to the end of the first row (as in, gone thru every possible first position due to a lot of removes, you've failed to complete the board. shouldn't really fail tho)
     //MAYBE DO SOMETHING THAT IS LIKE WITH A LOOP, FOR EVERY SPOT IN CURR RUN HELPSOLVE AND IF IT RUNS UNTIL A SPACE ON EVERY ROW IS FULL
     //THEN RETURN TRUE
     if (curR >= temp.getSize()){
-      System.out.println("****FOUND A WORKING BOARD****");
-      System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
+      //System.out.println("****FOUND A WORKING BOARD****");
+      //System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
       for (int k = 0; k<getSize(); k++){
         for (int z = 0; z<getSize(); z++){
           board[k][z] = temp.getVal(k, z);
@@ -227,17 +222,17 @@ public class QueenBoard{
       for (int i = 0 ; i < temp.getSize(); i++){
         if (temp.canPlace(curR, i)){
           temp.addQueen(curR, i);
-          System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
+          //System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
           if (helpSolve(curR+1, temp) == false){//will run even if it's ok, if it's ok don't do anything
             temp.removeQueen(curR, i);
-            System.out.println("****REMOVING WHAT WAS JUST PLACED BC NO SOLUTIONS PASSED THAT");
-            System.out.println("****CURRENTLY LOOKS LIKE: \n" + temp.toStringDebug());
+            //System.out.println("****REMOVING WHAT WAS JUST PLACED BC NO SOLUTIONS PASSED THAT");
+            //System.out.println("****CURRENTLY LOOKS LIKE: \n" + temp.toStringDebug());
           }
         }
       }
       return false;
     }
-
+    */
 
 
     /*
@@ -273,10 +268,11 @@ public class QueenBoard{
       helpSolve(curR, toRemove);
     }
     return false;
-    */
   }
+    */
 
   //exclude is supposed to be either previous space of queen, if you removed, or -1 meaning just check based on other queen's paths
+  /*
   private int isSpace(int row, int exclude){ //for a given row, go thru all the columns. return first space that something can be put in
     for (int i = 0; i<board.length; i++){
       if (board[row][i] == 0 && exclude != -1 && i != exclude){
@@ -285,6 +281,7 @@ public class QueenBoard{
     }
     return -1;
   }
+  */
 
   /**
   *@return the number of solutions found, and leaves the board filled with only 0's
