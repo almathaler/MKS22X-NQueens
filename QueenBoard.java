@@ -35,6 +35,12 @@ public class QueenBoard{
       }
     }
   }
+  private int getSize(){
+    return board.length;
+  }
+  private boolean canPlace(int r, int c){
+    return board[r][c] == 0;
+  }
   private boolean addQueen(int r, int c){
     if (board[r][c] == -1){
       return false; //there's already a queen
@@ -184,18 +190,35 @@ public class QueenBoard{
     if (board.length < 4){ //doesn't work
       return false;
     }else{
-      return helpSolve(0,0);
+      for (int i = 0; i < board.length; i++){
+        QueenBoard temp = new QueenBoard(getSize());
+        if (helpSolve(0, temp)){
+          return true;
+        }
+      }
+      return false;
     }
   }
 
 //it shld be a helper solve method that is void, solve(int curR){}
 //and it will use isSpace to scan through curR. IF there's a space, add to it. Continue to solve with curR+1
 //if there isn't space, remove (find instance of -1 in board[curR-1]) previous queen and solve that row again
-  private boolean helpSolve(int curR, int curC){
+  private boolean helpSolve(int curR, QueenBoard temp){
     //base case is when curR >= board.length -- means you've filled up all the board
     //also if you've gotten to the end of the first row (as in, gone thru every possible first position due to a lot of removes, you've failed to complete the board. shouldn't really fail tho)
     //MAYBE DO SOMETHING THAT IS LIKE WITH A LOOP, FOR EVERY SPOT IN CURR RUN HELPSOLVE AND IF IT RUNS UNTIL A SPACE ON EVERY ROW IS FULL
     //THEN RETURN TRUE
+    if (curR >= temp.getSize()){
+      return true;
+    }else{
+      for (int i = 0 ; i < temp.getSize(); i++){
+        if (canPlace(curR, i)){
+          temp.addQueen(curR, i);
+          helpSolve(curR+1, temp);
+        }
+      }
+      return false;
+    }
 
 
 
