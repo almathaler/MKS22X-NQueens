@@ -25,6 +25,7 @@ public class QueenBoard{
     */
     example.solve();
     System.out.println(example.toStringDebug());
+    System.out.println(example.toString());
 
   }
   public QueenBoard(int size){
@@ -39,6 +40,7 @@ public class QueenBoard{
     return board.length;
   }
   private boolean canPlace(int r, int c){
+    System.out.println("***CAN PLACE CHECKING IF "  + r + ", " + c + "IS FINE. THIS IS IT'S VALUE: " + board[r][c]);
     return board[r][c] == 0;
   }
   private int getVal(int r, int c){
@@ -194,6 +196,7 @@ public class QueenBoard{
       return false;
     }else{
       for (int i = 0; i < board.length; i++){
+        System.out.println("***NOW CHECKING WITH STARTING POINT AT (0, " + i + ")");
         QueenBoard temp = new QueenBoard(getSize());
         if (helpSolve(0, temp)){
           return true;
@@ -212,6 +215,8 @@ public class QueenBoard{
     //MAYBE DO SOMETHING THAT IS LIKE WITH A LOOP, FOR EVERY SPOT IN CURR RUN HELPSOLVE AND IF IT RUNS UNTIL A SPACE ON EVERY ROW IS FULL
     //THEN RETURN TRUE
     if (curR >= temp.getSize()){
+      System.out.println("****FOUND A WORKING BOARD****");
+      System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
       for (int k = 0; k<getSize(); k++){
         for (int z = 0; z<getSize(); z++){
           board[k][z] = temp.getVal(k, z);
@@ -220,9 +225,14 @@ public class QueenBoard{
       return true;
     }else{
       for (int i = 0 ; i < temp.getSize(); i++){
-        if (canPlace(curR, i)){
+        if (temp.canPlace(curR, i)){
           temp.addQueen(curR, i);
-          helpSolve(curR+1, temp);
+          System.out.println("****LOOKS LIKE**** \n" + temp.toStringDebug());
+          if (helpSolve(curR+1, temp) == false){//will run even if it's ok, if it's ok don't do anything
+            temp.removeQueen(curR, i);
+            System.out.println("****REMOVING WHAT WAS JUST PLACED BC NO SOLUTIONS PASSED THAT");
+            System.out.println("****CURRENTLY LOOKS LIKE: \n" + temp.toStringDebug());
+          }
         }
       }
       return false;
