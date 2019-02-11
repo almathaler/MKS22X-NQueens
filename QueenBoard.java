@@ -41,6 +41,9 @@ public class QueenBoard{
   private boolean canPlace(int r, int c){
     return board[r][c] == 0;
   }
+  private int getVal(int r, int c){
+    return board[r][c];
+  }
   private boolean addQueen(int r, int c){
     if (board[r][c] == -1){
       return false; //there's already a queen
@@ -209,6 +212,11 @@ public class QueenBoard{
     //MAYBE DO SOMETHING THAT IS LIKE WITH A LOOP, FOR EVERY SPOT IN CURR RUN HELPSOLVE AND IF IT RUNS UNTIL A SPACE ON EVERY ROW IS FULL
     //THEN RETURN TRUE
     if (curR >= temp.getSize()){
+      for (int k = 0; k<getSize(); k++){
+        for (int z = 0; z<getSize(); z++){
+          board[k][z] = temp.getVal(k, z);
+        }
+      }
       return true;
     }else{
       for (int i = 0 ; i < temp.getSize(); i++){
