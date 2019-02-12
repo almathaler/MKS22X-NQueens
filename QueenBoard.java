@@ -1,5 +1,6 @@
 public class QueenBoard{
   private int[][]board;
+
   public static void main(String[] args){
     /*
     QueenBoard example = new QueenBoard(Integer.parseInt(args[0]));
@@ -18,6 +19,7 @@ public class QueenBoard{
     QueenBoard example = new QueenBoard(8);
     System.out.println("Count for board size 8: (should be 92) " + example.countSolutions());
   }
+
   public QueenBoard(int size){
     board = new int[size][size];
     for (int i = 0; i<size; i++){
