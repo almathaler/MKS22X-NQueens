@@ -288,10 +288,12 @@ public class QueenBoard{
     return -1;
   }
   */
-  private void clear(){
-    for (int i = 0; i<board.length; i++){
+  private void removeQueenS(int fromHereOn){
+    for (int i = fromHereOn; i<board.length; i++){
       for (int k = 0; k<board.length; k++){
-        board[i][k] = 0;
+        if (board[i][k] == -1){
+          removeQueen(i, k);
+        }
       }
     }
   }
@@ -300,14 +302,60 @@ public class QueenBoard{
   *@throws IllegalStateException when the board starts with any non-zero value
   */
   public int countSolutions(){
-    return helpCount(0, 0);
+    if (board[0][0] != 0){
+      throw new IllegalStateException("you need to use an object with an empty board!");
+    }
+    return helpCount(0, 0, 0);
   }
-  private int helpCount(int curR, int total){
+  //note: emory helped me a lot
+  private int helpCount(int r, int c, int queens){
+    int toReturn = 0;
+    //if the number of queens is n return true
+    if(queens == board.length){
+      return 1; //if you have n queens, return 1. by end of recursion, you will have added 1 to toReturn as many times as # of solutions you hit
+    }
+    //otherwise loop through each row
+    for(int curC = 0; curC < board.length; curC++){ //go thru every column for the row you're on
+      if(addQueen(r, curC)){ //see if you can add a queen to this column
+        //System.out.println("Adding queen to (" + r + ", " + curC + ")");
+        //System.out.println(toString() + "\n" + toStringDebug());
+        //System.out.println("There are currently " + (queens+1) + " queens on the board");
+        toReturn += helpCount(r+1, 0, queens+1); //if you can, go thru all possibilities of other combos
+      }
+      removeQueen(r, curC);
+    }
+    //if cant be placed return false
+    return toReturn;
+    /*
     System.out.println("At the start of a new helpCount call");
     if (curR >= board.length){
       return total; //if you've hit the end, you're true
     }
-    for (int c = 0; c<board.length; c++){ //for every column in a row
+    //for (int c = 0; c<board.length; c++){ //for every column in a row
+    if (addQueen(curR, curC)){
+      //System.out.println("added Queen");
+      System.out.println("was able to add to " + curR + ", " + curC);
+      if (helpSolve(curR+1)){
+        System.out.println("a solution exists from this point, it's: ");
+        System.out.println(toString() + "\n" + toStringDebug());
+        if (curC == board.length-1){
+          removeQueenS(curR+1); //if you're not finished checking all possibilites in this row, delete what u have so u can keep checking
+        }else{
+          removeQueenS(curR); //if you've looked at everything,
+        }
+        // delete everything helpSolve added after curR
+        System.out.println("cleared what was added so we can check next block over")
+        if (curC == board.length-1){
+          return helpCount(curR+1, 0, total+1);
+        }
+        return helpCount(curR, curC+1, total+1);
+      }
+    }
+    if (curC == board.length-1){
+      return helpCount(curR+1, 0, total);
+    }
+    return helpCount(curR, curC+1, total);
+
       System.out.println("In the for loop for " + curR);
       System.out.println("Board looks like: ");
       System.out.println(toString());
@@ -317,6 +365,9 @@ public class QueenBoard{
         System.out.println("checking spot " + c + ", was able to add to " + curR + ", " + c);
         if (helpSolve(curR+1)){ //if you can, then go on to checking for all other possibilites if u can add a queen
         //  System.out.println("called helpCount(" + (curR+1) + ", " + (total+1) + ")");
+          //removeQueenS(curR+1);//don't want helpSolve to fill everything up
+          System.out.println("Should just have removed queens, looks now like: ");
+          System.out.println(toString() + "\n" + toStringDebug());
           System.out.println("a solution exists from that spot, total is now: ");
           total++; //return true if you get to curR >= board.length, then you won't have to remove the queen
           System.out.println(total);
@@ -326,9 +377,10 @@ public class QueenBoard{
         removeQueen(curR, c);
         System.out.println("removing queen from: " + curR + ", " + c);
       }
-    }
-    System.out.println("called helpCount again with " + (curR+1) + ", " + total);
-    return helpCount(curR+1, total);
+      */
+    //}
+    //System.out.println("called helpCount again with " + (curR+1) + ", " + total);
+    //return helpCount(curR+1, total);
     //return total;
     //return false;
     //what do i put here?
