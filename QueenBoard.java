@@ -175,8 +175,12 @@ public class QueenBoard{
   *@throws IllegalStateException when the board starts with any non-zero value
   */
   public boolean solve() throws IllegalStateException{
-    if (board[0][0] != 0){ //exception
-      throw new IllegalStateException("You didn't input a empty board!");
+    for (int i = 0; i<board.length; i++){
+      for (int k = 0; k<board.length; k++){
+        if (board[i][k] != 0){
+          throw new IllegalStateException("you need to use an object with an empty board!");
+        }
+      }
     }
     /*
     if (board.length == 1){ //"trivial"
@@ -186,9 +190,8 @@ public class QueenBoard{
     if (board.length < 4){ //doesn't work
       return false;
     */
-    else{
-      return helpSolve(0);
-    }
+    return helpSolve(0);
+
       //return false;
   }
 
@@ -302,29 +305,35 @@ public class QueenBoard{
   *@throws IllegalStateException when the board starts with any non-zero value
   */
   public int countSolutions(){
-    if (board[0][0] != 0){
-      throw new IllegalStateException("you need to use an object with an empty board!");
+    for (int i = 0; i<board.length; i++){
+      for (int k = 0; k<board.length; k++){
+        if (board[i][k] != 0){
+          throw new IllegalStateException("you need to use an object with an empty board!");
+        }
+      }
     }
-    return helpCount(0, 0, 0);
+    return helpCount(0, 0);
   }
   //note: emory helped me a lot
-  private int helpCount(int r, int c, int queens){
+  private int helpCount(int r, int queens){
     int toReturn = 0;
-    //if the number of queens is n return true
+    //^this will count how many good SOLUTIONS
+    //V this counts how many queens we r currently dealing w. toReturn should only update once parameter queens is n
     if(queens == board.length){
       return 1; //if you have n queens, return 1. by end of recursion, you will have added 1 to toReturn as many times as # of solutions you hit
-    }
-    //otherwise loop through each row
+    }//^this is what gets toReturn to update, for every time u hit n queens you will add 1 to toReturn. initial
+    //call to helpCount is from 0,0,0 so it can't return 1, only add to its toReturn every addition of 1 correct solution
     for(int curC = 0; curC < board.length; curC++){ //go thru every column for the row you're on
       if(addQueen(r, curC)){ //see if you can add a queen to this column
         //System.out.println("Adding queen to (" + r + ", " + curC + ")");
         //System.out.println(toString() + "\n" + toStringDebug());
         //System.out.println("There are currently " + (queens+1) + " queens on the board");
-        toReturn += helpCount(r+1, 0, queens+1); //if you can, go thru all possibilities of other combos
-      }
+        toReturn += helpCount(r+1, queens+1); //if you can, go thru all possibilities of other combos
+      }//when you could successfully add from that point, toReturn gains 1 solution
+      //if you couldn't add, toReturn is given 0,
       removeQueen(r, curC);
     }
-    //if cant be placed return false
+    //
     return toReturn;
     /*
     System.out.println("At the start of a new helpCount call");
