@@ -7,14 +7,14 @@ public class QueenBoard{
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
     */
-    /*
-    for (int i = 20; i<28; i++){
+
+    for (int i = 1; i<12; i++){
       QueenBoard example = new QueenBoard(i);
       example.solve();
       System.out.println(example.toStringDebug());
       System.out.println(example.toString());
     }
-    */
+
     QueenBoard example = new QueenBoard(8);
     System.out.println("Count for board size 8: (should be 92) " + example.countSolutions());
   }
@@ -41,18 +41,22 @@ public class QueenBoard{
       return false; //there's already a queen
     }
     board[r][c] = -1;
+    /*
     for (int upRow = 0; upRow<r; upRow++){
       board[upRow][c] += 1;
     }
+    */
     for (int downRow = r+1; downRow<board.length; downRow++){
       board[downRow][c] += 1;
     }
+    /*
     for (int leftCol = 0; leftCol<c; leftCol++){
       board[r][leftCol] += 1;
     }
     for (int rightCol = c+1; rightCol <board.length; rightCol++){
       board[r][rightCol] +=1;
     }
+    */
     int curR = r+1;
     int curC = c+1; // down to bottom right
     while (curR < board.length && curC < board.length){
@@ -67,6 +71,7 @@ public class QueenBoard{
       curR++;
       curC--;
     }
+    /*
     curR = r-1;
     curC = c-1; // up to top left
     while (curR >= 0 && curC >= 0){
@@ -81,6 +86,7 @@ public class QueenBoard{
       curR--;
       curC++;
     }
+    */
     return true;
     //if at col 3 and row 4, you can do +3+3, +2+2, +1+1 as your 3 diagonals that are above the QueenBoard
   };//PROBLEM IS THAT ADDING A QUEEN WILL ADD 1 TO THE QUEENS THAT ARE ELSEWHERE THAT IS A PROBLEM!!! THATS
@@ -89,18 +95,22 @@ public class QueenBoard{
       return false; //nothing to remove
     }
     board[r][c] = 0;
+    /*
     for (int upRow = 0; upRow<r; upRow++){
       board[upRow][c] -= 1;
     }
+    */
     for (int downRow = r+1; downRow<board.length; downRow++){
       board[downRow][c] -= 1;
     }
+    /*
     for (int leftCol = 0; leftCol<c; leftCol++){
       board[r][leftCol] -= 1;
     }
     for (int rightCol = c+1; rightCol <board.length; rightCol++){
       board[r][rightCol] -=1;
     }
+    */
     int curR = r+1;
     int curC = c+1; // down to bottom right
     while (curR < board.length && curC < board.length){
@@ -115,6 +125,7 @@ public class QueenBoard{
       curR++;
       curC--;
     }
+    /*
     curR = r-1;
     curC = c-1; // up to top left
     while (curR >= 0 && curC >= 0){
@@ -129,6 +140,7 @@ public class QueenBoard{
       curR--;
       curC++;
     }
+    */
     return true;
   };
   /**
