@@ -1,16 +1,22 @@
 public class QueenBoard{
   private int[][]board;
   public static void main(String[] args){
+    /*
     QueenBoard example = new QueenBoard(Integer.parseInt(args[0]));
     example.solve();
     System.out.println(example.toStringDebug());
     System.out.println(example.toString());
+    */
     /*
-    for (int i = 1; i<12; i++){
+    for (int i = 20; i<28; i++){
       QueenBoard example = new QueenBoard(i);
-      v
+      example.solve();
+      System.out.println(example.toStringDebug());
+      System.out.println(example.toString());
     }
     */
+    QueenBoard example = new QueenBoard(8);
+    System.out.println("Count for board size 8: (should be 92) " + example.countSolutions());
   }
   public QueenBoard(int size){
     board = new int[size][size];
@@ -282,11 +288,50 @@ public class QueenBoard{
     return -1;
   }
   */
-
+  private void clear(){
+    for (int i = 0; i<board.length; i++){
+      for (int k = 0; k<board.length; k++){
+        board[i][k] = 0;
+      }
+    }
+  }
   /**
   *@return the number of solutions found, and leaves the board filled with only 0's
   *@throws IllegalStateException when the board starts with any non-zero value
   */
-  // public int countSolutions(){}
+  public int countSolutions(){
+    return helpCount(0, 0);
+  }
+  private int helpCount(int curR, int total){
+    System.out.println("At the start of a new helpCount call");
+    if (curR >= board.length){
+      return total; //if you've hit the end, you're true
+    }
+    for (int c = 0; c<board.length; c++){ //for every column in a row
+      System.out.println("In the for loop for " + curR);
+      System.out.println("Board looks like: ");
+      System.out.println(toString());
+      System.out.println(toStringDebug());
+      if (addQueen(curR, c)){ //check to see if you can add a queen there
+        //System.out.println("added Queen");
+        System.out.println("checking spot " + c + ", was able to add to " + curR + ", " + c);
+        if (helpSolve(curR+1)){ //if you can, then go on to checking for all other possibilites if u can add a queen
+        //  System.out.println("called helpCount(" + (curR+1) + ", " + (total+1) + ")");
+          System.out.println("a solution exists from that spot, total is now: ");
+          total++; //return true if you get to curR >= board.length, then you won't have to remove the queen
+          System.out.println(total);
+          //System.out.println("Called helpCount again");
+        }
+      //  System.out.println("Can't solve from there, removing queen: ");
+        removeQueen(curR, c);
+        System.out.println("removing queen from: " + curR + ", " + c);
+      }
+    }
+    System.out.println("called helpCount again with " + (curR+1) + ", " + total);
+    return helpCount(curR+1, total);
+    //return total;
+    //return false;
+    //what do i put here?
+  }
 
 }
